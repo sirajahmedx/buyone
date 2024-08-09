@@ -1,8 +1,8 @@
-import Form from "@/components/Form";
+import AddForm from "@/components/Pages/AddForm";
 import React from "react";
 
 function Add() {
-   return <Form />;
+   return <AddForm />;
 }
 
 export default Add;

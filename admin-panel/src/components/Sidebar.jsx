@@ -17,7 +17,7 @@ export default function Sidebar() {
 
    return (
       <div className="lg:drawer-open">
-         <div className="fixed top-0 left-0 h-full bg-gray-800 text-white w-64 p-4">
+         <div className="h-full bg-gray-800 text-white w-72 p-4">
             {/* Logo Section */}
             <div className="flex justify-start mb-20 hover:text-blue-400">
                <Link href="/">
