@@ -100,7 +100,7 @@ export default function Listing() {
                   <thead className="bg-gray-950">
                      <tr>
                         <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[15%] border border-gray-700/50">
-                           Title
+                           Name
                         </th>
                         <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[45%] border border-gray-700/50">
                            Description
@@ -143,7 +143,7 @@ export default function Listing() {
                   <thead className="bg-gray-950">
                      <tr>
                         <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[15%] border border-gray-700/50">
-                           Title
+                           Name
                         </th>
                         <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[45%] border border-gray-700/50">
                            Description
@@ -163,7 +163,7 @@ export default function Listing() {
                            className="hover:bg-gray-800 border border-gray-700/50"
                         >
                            <td className="px-6 py-2 text-md text-gray-300 border border-gray-700/50">
-                              {product.title}
+                              {product.name}
                            </td>
                            <td className="px-6 py-2 text-md text-gray-300 border border-gray-700/50">
                               {product.description.substring(0, 75) +

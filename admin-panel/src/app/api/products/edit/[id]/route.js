@@ -7,13 +7,13 @@ export async function PUT(req, { params }) {
       await dbConnect();
 
       const body = await req.json();
-      const { title, description, price } = body;
+      const { name, description, price, images } = body;
 
       console.log("Received data:", body); // Add this line for debugging
 
       const product = await Product.findByIdAndUpdate(
          params.id, // Use the ID from the route parameters
-         { title, description, price },
+         { title, description, price, images },
          { new: true } // Return the updated document
       );
 

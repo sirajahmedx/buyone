@@ -14,7 +14,7 @@ import Success from "../../Success";
 
 export default function EditForm({ id }) {
    const router = useRouter();
-   const [title, setTitle] = useState("");
+   const [name, setName] = useState("");
    const [description, setDescription] = useState("");
    const [price, setPrice] = useState("");
    const [loading, setLoading] = useState(false);
@@ -29,12 +29,12 @@ export default function EditForm({ id }) {
 
       try {
          await axios.put(`/api/products/edit/${id}`, {
-            title,
+            name,
             description,
             price,
          });
          setSuccess("Product updated successfully!"); // Corrected success message
-         setTitle("");
+         setName("");
          setDescription("");
          setPrice("");
          router.push("/products"); // Redirect to /products after success
@@ -81,18 +81,18 @@ export default function EditForm({ id }) {
 
             <div className="mb-5">
                <label
-                  htmlFor="title"
+                  htmlFor="name"
                   className="block text-sm font-medium text-gray-300 mb-1"
                >
-                  Title
+                  name
                </label>
                <input
                   type="text"
-                  id="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full border border-gray-600 rounded-lg p-3 bg-gray-700 text-gray-200"
-                  placeholder="Enter title"
+                  placeholder="Enter name"
                   required
                />
             </div>

@@ -141,13 +141,13 @@ export default function Listing() {
                <table className="min-w-full bg-gray-900 text-white shadow-lg rounded-lg border border-gray-700/50">
                   <thead className="bg-gray-950">
                      <tr>
-                        <th className="px-4 py-3 text-left text-xl font-medium text-gray-200 w-[32%] border border-gray-700/50">
+                        <th className="px-4 py-2 text-left text-xl font-medium text-gray-200 w-[32%] border border-gray-700/50">
                            Name
                         </th>
-                        <th className="px-6 py-3 text-left text-xl font-medium text-gray-200 w-[50%] border border-gray-700/50">
+                        <th className="px-4 py-2 text-left text-xl font-medium text-gray-200 w-[50%] border border-gray-700/50">
                            Parent Category
                         </th>
-                        <th className="px-4 py-3 text-left text-xl font-medium text-gray-200 w-[18%] border border-gray-700/50">
+                        <th className="px-4 py-2 text-left text-xl font-medium text-gray-200 w-[18%] border border-gray-700/50">
                            Actions
                         </th>
                      </tr>
@@ -158,13 +158,13 @@ export default function Listing() {
                            key={category._id}
                            className="hover:bg-gray-800 border border-gray-700/50"
                         >
-                           <td className="px-3 py-3 text-md text-gray-300 border border-gray-700/50">
+                           <td className="px-3 py-2 text-md text-gray-300 border border-gray-700/50">
                               {category.name}
                            </td>
-                           <td className="px-6 py-3 text-lg text-gray-300 border border-gray-700/50">
+                           <td className="px-6 py-2 text-lg text-gray-300 border border-gray-700/50">
                               {category.parent}
                            </td>
-                           <td className="px-3 py-3 text-lg text-gray-300 flex justify-center items-center space-x-4">
+                           <td className="px-3 py-2 text-lg text-gray-300 flex justify-center items-center space-x-4">
                               <Link
                                  href={`/categories/edit/${category._id}`}
                                  className="flex items-center text-blue-400 border-none hover:text-blue-600 transition-colors duration-200"

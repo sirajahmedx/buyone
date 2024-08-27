@@ -10,7 +10,7 @@ import {
 } from "@mui/icons-material";
 
 export default function Add({ modalRef, refreshCategories }) {
-   const [title, setTitle] = useState("");
+   const [name, setName] = useState("");
    const [description, setDescription] = useState("");
    const [price, setPrice] = useState("");
    const [loading, setLoading] = useState(false);
@@ -27,13 +27,13 @@ export default function Add({ modalRef, refreshCategories }) {
 
       try {
          await axios.post("/api/products/add", {
-            title,
+            name,
             description,
             price,
             images,
          });
          setSuccess("Product added successfully");
-         setTitle("");
+         setName("");
          setDescription("");
          setPrice("");
          setImages([]);
@@ -108,18 +108,18 @@ export default function Add({ modalRef, refreshCategories }) {
 
             <div className="mb-5">
                <label
-                  htmlFor="title"
+                  htmlFor="name"
                   className="block text-sm font-medium text-gray-300 mb-1"
                >
-                  Title
+                  name
                </label>
                <input
                   type="text"
-                  id="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full border border-gray-600 rounded-lg p-3 bg-gray-700 text-gray-200"
-                  placeholder="Enter title"
+                  placeholder="Enter name"
                   required
                />
             </div>
