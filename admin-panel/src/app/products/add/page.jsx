@@ -1,4 +1,4 @@
-import AddForm from "@/components/Pages/AddForm";
+import AddForm from "@/components/Pages/Add";
 import React from "react";
 
 function Add() {

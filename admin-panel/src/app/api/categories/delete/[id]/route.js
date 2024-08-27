@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/connect";
-import Product from "@/lib/product";
+import Category from "@/lib/category";
 import { NextResponse } from "next/server";
 
 export async function DELETE(req, { params }) {
@@ -8,13 +8,13 @@ export async function DELETE(req, { params }) {
 
       const { id } = params;
 
-      const deletedProduct = await Product.findByIdAndDelete(id);
+      const deletedCategory = await Category.findByIdAndDelete(id);
 
-      if (!deletedProduct) {
+      if (!deletedCategory) {
          return NextResponse.json(
             {
                success: false,
-               message: "Product not found",
+               message: "Category not found",
             },
             { status: 404 }
          );
@@ -23,12 +23,12 @@ export async function DELETE(req, { params }) {
       return NextResponse.json(
          {
             success: true,
-            message: "Product deleted successfully",
+            message: "Category deleted successfully",
          },
          { status: 200 }
       );
    } catch (error) {
-      console.error("Error deleting product:", error); // Add this line for debugging
+      console.error("Error deleting Category:", error); // Add this line for debugging
       return NextResponse.json(
          {
             success: false,

@@ -2,7 +2,13 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import UploadIcon from "@mui/icons-material/Upload";
+import {
+   Store as StoreIcon,
+   Image as ImageIcon,
+   UploadFile,
+   UploadRounded,
+} from "@mui/icons-material";
+
 import Loading from "../Loading";
 import Success from "../Success";
 
@@ -40,12 +46,26 @@ export default function EditForm({ id }) {
       }
    };
 
+   const handleImageUpload = async (e) => {
+      try {
+         console.log(e);
+         const files = e.target.files;
+         if (files?.length > 0) return;
+         const data = new FormData();
+         files.forEach((file) => data.append("file", file));
+         await axios.post("/api/products/upload-image", data, {
+            headers: {
+               "Content-Type": "multipart/form-data",
+            },
+         });
+         console.log("Done");
+      } catch (error) {
+         console.error("Error uploading image:", error);
+      }
+   };
+
    if (loading) {
-      return (
-         <div className="flex h-screen items-center justify-center bg-gray-800">
-            <Loading />
-         </div>
-      );
+      return <Loading />;
    }
 
    return (
@@ -54,23 +74,16 @@ export default function EditForm({ id }) {
             onSubmit={handleSubmit}
             className="w-full max-w-md p-8 shadow-lg rounded-lg bg-gray-800"
          >
-            <h2 className="text-3xl font-semibold text-gray-100 mb-6">
-               Edit Product
+            <h2 className="text-3xl font-semibold text-gray-100 mb-6 flex items-center">
+               <StoreIcon className="mr-2" fontSize="large" />
+               Edit Details
             </h2>
 
-            {/* Uncomment if image upload is needed */}
-            {/* <div className="mb-6">
-               <label className="text-sm font-medium text-gray-300 mb-3 block">
-                  Upload Image
-               </label>
-               <button className="flex items-center justify-center border border-gray-600 rounded-lg p-3 bg-gray-700 hover:bg-gray-600">
-                  <UploadIcon fontSize="large" className="text-gray-200" />
-                  <input type="file" id="image" className="hidden" />
-               </button>
-            </div> */}
-
             <div className="mb-5">
-               <label className="text-sm font-medium text-gray-300 mb-1 block">
+               <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-300 mb-1"
+               >
                   Title
                </label>
                <input
@@ -85,7 +98,10 @@ export default function EditForm({ id }) {
             </div>
 
             <div className="mb-5">
-               <label className="text-sm font-medium text-gray-300 mb-1 block">
+               <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-300 mb-1"
+               >
                   Description
                </label>
                <textarea
@@ -100,7 +116,10 @@ export default function EditForm({ id }) {
             </div>
 
             <div className="mb-5">
-               <label className="text-sm font-medium text-gray-300 mb-1 block">
+               <label
+                  htmlFor="price"
+                  className="block text-sm font-medium text-gray-300 mb-1"
+               >
                   Price
                </label>
                <input
@@ -114,13 +133,33 @@ export default function EditForm({ id }) {
                />
             </div>
 
-            {success && ( // Correctly handle success message
+            <div className="mb-5">
+               <label
+                  htmlFor="image"
+                  className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 flex items-center justify-between cursor-pointer"
+               >
+                  <div className="flex items-center justify-center w-full">
+                     <ImageIcon fontSize="large" />
+                     <span className="ml-4 text-lg">Upload Image</span>
+                  </div>
+                  <UploadRounded fontSize="large" />
+               </label>
+               <input
+                  type="file"
+                  id="image"
+                  onChange={(e) => handleImageUpload(e)}
+                  className="hidden"
+                  accept="image/*"
+               />
+            </div>
+
+            {success && (
                <div className="mb-5 flex items-center text-green-400">
                   <Success msg={success} />
                </div>
             )}
 
-            {error && ( // Display error if any
+            {error && (
                <div className="mb-5 text-red-400">
                   <svg
                      xmlns="http://www.w3.org/2000/svg"

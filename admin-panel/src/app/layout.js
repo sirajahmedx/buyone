@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import Back from "@/components/Back"; // Import the Back component
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,11 +14,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
    return (
       <SessionProvider>
-         <html lang="en" data-theme="cupcake">
-            <body className={inter.className}>
+         <html lang="en" data-theme="cupcake" suppressHydrationWarning>
+            <body className={inter.className} suppressHydrationWarning>
                <div className="flex min-h-screen">
                   <Sidebar />
-                  <main className="flex-grow">{children}</main>
+                  <main className="flex-grow relative bg-gray-900">
+                     <div className="absolute top-4 left-4">
+                        <Back />
+                     </div>
+                     {children}
+                  </main>
                </div>
             </body>
          </html>

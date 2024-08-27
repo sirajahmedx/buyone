@@ -1,8 +1,8 @@
-import ProductsComponent from "@/components/Pages/Products";
+import Listing from "@/components/Pages/Listing";
 import React from "react";
 
 function Products() {
-   return <ProductsComponent />;
+   return <Listing />;
 }
 
 export default Products;

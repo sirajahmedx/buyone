@@ -1,4 +1,4 @@
-import EditForm from "@/components/Pages/EditForm";
+import EditForm from "@/components/Pages/Edit";
 import React from "react";
 
 function Edit({ params }) {

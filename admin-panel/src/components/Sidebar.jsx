@@ -5,10 +5,12 @@ import HomeIcon from "@mui/icons-material/Home";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import StoreIcon from "@mui/icons-material/Store";
+import CategoryIcon from "@mui/icons-material/Category";
 
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
+import Back from "./Back";
 
 export default function Sidebar() {
    const pathname = usePathname();
@@ -53,9 +55,9 @@ export default function Sidebar() {
                      pathname === "/orders" ? "text-blue-400" : ""
                   }`}
                >
-                  <InventoryIcon className="mr-4" fontSize="large" />
-                  <Link href="/orders" className="text-xl">
-                     Orders
+                  <CategoryIcon className="mr-4" fontSize="large" />
+                  <Link href="/categories" className="text-xl">
+                     Categories
                   </Link>
                </li>
                <li

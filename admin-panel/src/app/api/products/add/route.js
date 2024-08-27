@@ -7,10 +7,10 @@ export async function POST(req) {
       await dbConnect();
 
       const body = await req.json();
-      const { title, description, price } = body;
+      const { title, description, price, images } = body;
 
       // Validate input
-      if (!title || !description || !price) {
+      if (!title || !description || !price || !images) {
          return NextResponse.json(
             { success: false, message: "All fields are required" },
             { status: 400 }
@@ -22,6 +22,7 @@ export async function POST(req) {
          title,
          description,
          price,
+         images,
       });
 
       return NextResponse.json(
