@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/pages/Sidebar";
 import Back from "@/components/Back"; // Import the Back component
 
 const inter = Inter({ subsets: ["latin"] });

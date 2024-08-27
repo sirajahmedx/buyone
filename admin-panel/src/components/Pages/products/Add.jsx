@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import Success from "../Success";
+import Success from "../../Success";
 import axios from "axios";
-// import axios from "axios";
 import { generatePutUrl } from "@/lib/aws";
 import {
    Store as StoreIcon,
@@ -10,7 +9,7 @@ import {
    UploadRounded,
 } from "@mui/icons-material";
 
-export default function AddForm() {
+export default function Add({ modalRef, refreshCategories }) {
    const [title, setTitle] = useState("");
    const [description, setDescription] = useState("");
    const [price, setPrice] = useState("");
@@ -18,7 +17,7 @@ export default function AddForm() {
    const [error, setError] = useState("");
    const [success, setSuccess] = useState("");
    const [uploading, setUploading] = useState(false);
-   const [images, setImages] = useState([]); // Add state for images
+   const [images, setImages] = useState([]);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
@@ -31,14 +30,17 @@ export default function AddForm() {
             title,
             description,
             price,
-            images, // Include images in the POST request
+            images,
          });
          setSuccess("Product added successfully");
-
          setTitle("");
          setDescription("");
          setPrice("");
-         setImages([]); // Clear images after successful submission
+         setImages([]);
+         refreshCategories();
+         if (modalRef.current) {
+            modalRef.current.close();
+         }
       } catch (error) {
          setError("An error occurred while adding the product");
          console.error("Error adding product:", error);
@@ -47,15 +49,12 @@ export default function AddForm() {
       }
    };
 
-   // const image = [];
-
    async function handleImageUpload(ev) {
       const files = ev.target?.files;
       if (files?.length > 0) {
          setUploading(true);
          try {
             const uploadPromises = Array.from(files).map(async (file) => {
-               // Get the pre-signed URL for uploading the file
                const response = await axios.post("/api/aws/get-presigned-url", {
                   fileName: file.name,
                   fileType: file.type,
@@ -68,15 +67,10 @@ export default function AddForm() {
                }
 
                const { url } = response.data;
-               console.log(url);
 
-               // Upload the file directly to S3 using the pre-signed URL
                const uploadResponse = await axios.put(url, file, {
-                  headers: {
-                     "Content-Type": file.type,
-                  },
+                  headers: { "Content-Type": file.type },
                });
-               console.log(uploadResponse);
 
                if (uploadResponse.status !== 200) {
                   throw new Error(
@@ -84,22 +78,14 @@ export default function AddForm() {
                   );
                }
 
-               // Construct the URL of the uploaded file
                const fileUrl = `${process.env.NEXT_PUBLIC_AWS_BUCKET_URL}/${file.name}`;
-               console.log(fileUrl);
-
-               // Update the images state array with the new file URL
                setImages((oldImages) => [...oldImages, fileUrl]);
 
-               console.log(fileUrl);
                return fileUrl;
             });
 
-            // Wait for all uploads to complete
             await Promise.all(uploadPromises);
-            console.log("All files uploaded successfully");
          } catch (error) {
-            console.error("Error uploading image:", error.message);
             setError(
                `An error occurred while uploading the image: ${error.message}`
             );
@@ -110,10 +96,10 @@ export default function AddForm() {
    }
 
    return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-900">
+      <div className="flex justify-center items-center bg-gray-900 p-4">
          <form
             onSubmit={handleSubmit}
-            className="w-full max-w-md p-8 shadow-lg rounded-lg bg-gray-800"
+            className="w-full max-w-lg shadow-lg rounded-lg bg-gray-900"
          >
             <h2 className="text-3xl font-semibold text-gray-100 mb-6 flex items-center">
                <StoreIcon className="mr-2" fontSize="large" />
@@ -174,11 +160,15 @@ export default function AddForm() {
                />
             </div>
 
-            <div className="mb-5 w-full">
-               {!!images.map((link)=>(
-                  <image src={link} width={400} height={200}/>
+            <div className="mb-5 flex flex-wrap gap-4">
+               {images.map((link, index) => (
+                  <img
+                     key={index}
+                     src={link}
+                     alt={`Uploaded Image ${index + 1}`}
+                     className="w-32 h-32 object-cover rounded-lg border border-gray-600"
+                  />
                ))}
-
             </div>
 
             <div className="mb-5">
@@ -186,7 +176,7 @@ export default function AddForm() {
                   htmlFor="image"
                   className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 flex items-center justify-between cursor-pointer"
                >
-                  <div className="flex items-center justify-center w-full">
+                  <div className="flex items-center">
                      <ImageIcon fontSize="large" />
                      <span className="ml-4 text-lg">Upload Image</span>
                   </div>
@@ -195,15 +185,12 @@ export default function AddForm() {
                <input
                   type="file"
                   id="image"
-                  onChange={(e) => handleImageUpload(e)}
+                  onChange={handleImageUpload}
                   className="hidden"
                   accept="image/*"
-                  // multiple
+                  multiple
                />
             </div>
-
-            {images.length > 0 &&
-               images.map((image, index) => <div>{index}</div>)}
 
             {success && (
                <div className="mb-5 flex items-center text-green-400">
@@ -212,10 +199,10 @@ export default function AddForm() {
             )}
 
             {error && (
-               <div className="mb-5 text-red-400">
+               <div className="mb-5 text-red-400 flex items-center">
                   <svg
                      xmlns="http://www.w3.org/2000/svg"
-                     className="h-6 w-6 inline-block mr-2"
+                     className="h-6 w-6 mr-2"
                      fill="none"
                      viewBox="0 0 24 24"
                   >

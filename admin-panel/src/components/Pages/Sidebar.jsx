@@ -10,7 +10,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
-import Back from "./Back";
+import Back from "../Back";
 
 export default function Sidebar() {
    const pathname = usePathname();
@@ -24,7 +24,7 @@ export default function Sidebar() {
             <div className="flex justify-start mb-20 hover:text-blue-400">
                <Link href="/">
                   <StoreIcon className="mr-2" fontSize="large" />
-                  <span className="text-lg">Tech-Emporium</span>
+                  <span className="text-lg">BuyOne</span>
                </Link>
             </div>
 
@@ -52,7 +52,7 @@ export default function Sidebar() {
                </li>
                <li
                   className={`flex items-center hover:text-blue-400 ${
-                     pathname === "/orders" ? "text-blue-400" : ""
+                     pathname === "/categories" ? "text-blue-400" : ""
                   }`}
                >
                   <CategoryIcon className="mr-4" fontSize="large" />

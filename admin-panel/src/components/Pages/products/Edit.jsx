@@ -9,8 +9,8 @@ import {
    UploadRounded,
 } from "@mui/icons-material";
 
-import Loading from "../Loading";
-import Success from "../Success";
+import Loading from "../../Loading";
+import Success from "../../Success";
 
 export default function EditForm({ id }) {
    const router = useRouter();

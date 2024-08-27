@@ -1,4 +1,4 @@
-import Details from "@/components/Pages/Details";
+import Details from "@/components/pages/products/Details";
 import React from "react";
 
 function Detail({ params }) {

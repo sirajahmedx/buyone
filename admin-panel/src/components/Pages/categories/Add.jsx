@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const Modal = ({ modalRef, refreshCategories }) => {
+const Add = ({ modalRef, refreshCategories }) => {
    const [name, setName] = useState("");
    const [parent, setParent] = useState("");
    const [error, setError] = useState("");
@@ -46,14 +46,10 @@ const Modal = ({ modalRef, refreshCategories }) => {
    ];
 
    return (
-      <div className="bg-gray-900 rounded p-4 mb-4">
-         <div className="flex items-center justify-center w-full">
-            <h2 className="text-2xl font-bold mb-3 text-gray-50">
-               Add Category
-            </h2>
-         </div>
+      <div className="flex flex-col items-center justify-center bg-gray-900 rounded p-4 w-full max-w-lg">
+         <h2 className="text-2xl font-bold mb-3 text-gray-50">Add Category</h2>
          {error && <p className="text-red-500 mb-4 text-lg">{error}</p>}
-         <form onSubmit={handleSubmit}>
+         <form onSubmit={handleSubmit} className="w-full">
             <div className="mb-4">
                <label
                   htmlFor="name"
@@ -64,7 +60,7 @@ const Modal = ({ modalRef, refreshCategories }) => {
                <input
                   type="text"
                   id="name"
-                  className="w-full px-2 py-3 rounded border border-gray-400 bg-gray-700 text-gray-100 focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded border border-gray-400 bg-gray-700 text-gray-100 focus:outline-none focus:border-blue-500"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -78,7 +74,7 @@ const Modal = ({ modalRef, refreshCategories }) => {
                   Parent Category Name
                </label>
                <select
-                  className="select select-bordered mb-2 border-gray-400 bg-gray-700 text-gray-100 focus:outline-none focus:border-blue-500 px-2 py-3 w-full"
+                  className="w-full px-3 py-2 rounded border border-gray-400 bg-gray-700 text-gray-100 focus:outline-none focus:border-blue-500"
                   value={parent}
                   onChange={(e) => setParent(e.target.value)}
                >
@@ -92,11 +88,10 @@ const Modal = ({ modalRef, refreshCategories }) => {
                   ))}
                </select>
             </div>
-
             <button
                type="submit"
                disabled={loading}
-               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full"
             >
                {loading ? "Submitting..." : "Submit"}
             </button>
@@ -105,4 +100,4 @@ const Modal = ({ modalRef, refreshCategories }) => {
    );
 };
 
-export default Modal;
+export default Add;
