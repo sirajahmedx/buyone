@@ -6,10 +6,10 @@ const categorySchema = new mongoose.Schema(
          type: String,
          required: true,
       },
-      parent: {
+      subcategory: {
          type: String,
-         maxlength: 200,
       },
+      properties: [Object],
    },
    {
       timestamps: true,

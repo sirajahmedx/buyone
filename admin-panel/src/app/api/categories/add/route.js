@@ -3,22 +3,33 @@ import dbConnect from "@/lib/connect";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-   const { name, parent } = await request.json();
+   try {
+      const { name, subcategory, properties } = await request.json();
 
-   if (!name) {
-      return NextResponse.json({
-         error: "Name is required",
+      if (!name) {
+         return NextResponse.json({
+            error: "Name is required",
+         });
+      }
+      await dbConnect();
+
+      await Category.create({
+         name,
+         subcategory,
+         properties,
       });
+      return NextResponse.json(
+         { success: true, message: "Product added successfully!" },
+         { status: 200 }
+      );
+   } catch (error) {
+      console.error("Error Adding Category:", error); // Add this line for debugging
+      return NextResponse.json(
+         {
+            success: false,
+            message: error.message,
+         },
+         { status: 500 }
+      );
    }
-   await dbConnect();
-
-   await Category.create({
-      name,
-      parent,
-   });
-
-   return NextResponse.json(
-      { success: true, message: "Product added successfully!" },
-      { status: 200 }
-   );
 }

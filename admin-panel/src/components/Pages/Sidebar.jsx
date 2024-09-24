@@ -66,8 +66,8 @@ export default function Sidebar() {
                   }`}
                >
                   <SettingsIcon className="mr-4" fontSize="large" />
-                  <Link href="/settings" className="text-xl">
-                     Settings
+                  <Link href="/profile" className="text-xl">
+                     Profile
                   </Link>
                </li>
             </ul>

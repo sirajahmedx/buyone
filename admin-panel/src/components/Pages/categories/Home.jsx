@@ -4,13 +4,17 @@
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import Loading from "../../Loading";
+// import Loading from "../../Loading";
 import Error from "../../Error";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Add from "./Add";
+import { useSession } from "next-auth/react";
+// import { useRouter } from "next/navigation";
+// import NotRegistered from "@/components/NotRegistered";
 
 export default function Listing() {
+   // const { data: session, status } = useSession();
    const modalRef = useRef(null);
    const [categories, setCategories] = useState([]);
    const [loading, setLoading] = useState(false);
@@ -21,6 +25,7 @@ export default function Listing() {
       try {
          setLoading(true);
          const response = await axios.get("/api/categories/get");
+         console.log({ response });
          setCategories(response.data.categories);
       } catch (error) {
          setError(error.message);
@@ -47,6 +52,9 @@ export default function Listing() {
       }
    };
 
+   // if (!session) {
+   //    return <NotRegistered />;
+   // }
    // if (loading) return <span className="loading loading-spinner loading-lg"></span>;
    if (error) return <Error error={error} />;
 
@@ -105,10 +113,10 @@ export default function Listing() {
                   <thead className="bg-gray-950">
                      <tr>
                         <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[15%] border border-gray-700/50">
-                           Title
+                           Sub Category
                         </th>
                         <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[45%] border border-gray-700/50">
-                           Description
+                           Category
                         </th>
                         <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[15%] border border-gray-700/50">
                            Actions
@@ -118,10 +126,7 @@ export default function Listing() {
                   <tbody>
                      {/* Skeleton Rows */}
                      {[...Array(4)].map((_, index) => (
-                        <tr
-                           key={index}
-                           className="animate-pulse"
-                        >
+                        <tr key={index} className="animate-pulse">
                            <td className="px-6 py-2">
                               <div className="skeleton h-6 w-full bg-gray-800 rounded"></div>
                            </td>
@@ -145,7 +150,7 @@ export default function Listing() {
                            Name
                         </th>
                         <th className="px-4 py-2 text-left text-xl font-medium text-gray-200 w-[50%] border border-gray-700/50">
-                           Parent Category
+                           Sub Category
                         </th>
                         <th className="px-4 py-2 text-left text-xl font-medium text-gray-200 w-[18%] border border-gray-700/50">
                            Actions
@@ -158,11 +163,11 @@ export default function Listing() {
                            key={category._id}
                            className="hover:bg-gray-800 border border-gray-700/50"
                         >
+                           <td className="px-6 py-2 text-lg text-gray-300 border border-gray-700/50">
+                              {category.subcategory}
+                           </td>
                            <td className="px-3 py-2 text-md text-gray-300 border border-gray-700/50">
                               {category.name}
-                           </td>
-                           <td className="px-6 py-2 text-lg text-gray-300 border border-gray-700/50">
-                              {category.parent}
                            </td>
                            <td className="px-3 py-2 text-lg text-gray-300 flex justify-center items-center space-x-4">
                               <Link

@@ -1,49 +1,91 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Success from "../../Success";
 import axios from "axios";
 import { generatePutUrl } from "@/lib/aws";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
    Store as StoreIcon,
    Image as ImageIcon,
    UploadRounded,
 } from "@mui/icons-material";
 
-export default function Add({ modalRef, refreshCategories }) {
+export default function AddForm() {
    const [name, setName] = useState("");
+   const [category, setCategory] = useState("");
+   // const [categories, setCategories] = useState([]);
+   const [subCategory, setSubCategory] = useState("");
+   // const [subcategories, setSubcategories] = useState([]);
    const [description, setDescription] = useState("");
    const [price, setPrice] = useState("");
-   const [loading, setLoading] = useState(false);
-   const [error, setError] = useState("");
-   const [success, setSuccess] = useState("");
-   const [uploading, setUploading] = useState(false);
+   const [stock, setStock] = useState("");
+   const [affiliateLink, setAffiliateLink] = useState("");
+   const [ratings, setRatings] = useState("");
+   const [reviews, setReviews] = useState("");
+   const [tags, setTags] = useState([]);
+   const [isFeatured, setIsFeatured] = useState(false);
+   const [discount, setDiscount] = useState("");
    const [images, setImages] = useState([]);
+   const [success, setSuccess] = useState("");
+   const [error, setError] = useState("");
+   const [loading, setLoading] = useState(false);
+   const [uploading, setUploading] = useState(false);
+   const [brand, setBrand] = useState("");
+   const [properties, setProperties] = useState([]);
+
+   // useEffect(() => {
+   //    const fetchCategories = async () => {
+   //       try {
+   //          const response = await axios.get("/api/categories/get");
+   //          setCategories(response.data.categories);
+   //       } catch (err) {
+   //          setError("Failed to fetch categories.");
+   //       }
+   //    };
+   //    fetchCategories();
+   // }, []);
+
+   // useEffect(() => {
+   //    const fetchSubcategories = async () => {
+   //       if (category) {
+   //          try {
+   //             const response = await axios.get(
+   //                `/api/subcategories/get/${category}`
+   //             );
+   //             setSubcategories(response.data.subcategories);
+   //          } catch (err) {
+   //             setError("Failed to fetch subcategories.");
+   //          }
+   //       }
+   //    };
+   //    fetchSubcategories();
+   // }, [category]);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
       setLoading(true);
-      setError("");
-      setSuccess("");
-
       try {
-         await axios.post("/api/products/add", {
+         const catData = {
             name,
+            category,
+            subCategory,
             description,
             price,
+            // stock,
+            affiliateLink,
+            ratings,
+            reviews,
+            tags,
+            isFeatured,
+            discount,
             images,
-         });
-         setSuccess("Product added successfully");
-         setName("");
-         setDescription("");
-         setPrice("");
-         setImages([]);
-         refreshCategories();
-         if (modalRef.current) {
-            modalRef.current.close();
-         }
-      } catch (error) {
-         setError("An error occurred while adding the product");
-         console.error("Error adding product:", error);
+            brand,
+            properties,
+         };
+         await axios.post("/api/products/add", catData);
+         setSuccess("Product added successfully!");
+      } catch (err) {
+         setError("Failed to add product.");
       } finally {
          setLoading(false);
       }
@@ -95,140 +137,248 @@ export default function Add({ modalRef, refreshCategories }) {
       }
    }
 
+   function removeProperty(index) {
+      const newProperties = [...properties];
+      newProperties.splice(index, 1);
+      setProperties(newProperties);
+   }
+
+   function setPropName(index, newName) {
+      const newProperties = [...properties];
+      newProperties[index].name = newName;
+      setProperties(newProperties);
+   }
+   function setPropValues(index, newValues) {
+      const newProperties = [...properties];
+      newProperties[index].values = newValues;
+      setProperties(newProperties);
+   }
+
+   const handleTagsChange = (e) =>
+      setTags(e.target.value.split(",").map((tag) => tag.trim()));
+
+   const categories = ["1", "2", "3", "4", "5"];
+   const subCategories = ["1", "2", "3", "4", "5"];
+
    return (
-      <div className="flex justify-center items-center bg-gray-900 p-4">
-         <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-lg shadow-lg rounded-lg bg-gray-900"
-         >
-            <h2 className="text-3xl font-semibold text-gray-100 mb-6 flex items-center">
-               <StoreIcon className="mr-2" fontSize="large" />
-               Submit Details
+      <div className="w-screen h-screen flex justify-center items-center bg-gray-900">
+         <main className="w-full max-w-3xl p-8 bg-gray-800 rounded-lg shadow-lg">
+            <h2 className="text-3xl font-semibold text-gray-100 mb-6 text-center">
+               Submit Product Details
             </h2>
 
-            <div className="mb-5">
-               <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-300 mb-1"
-               >
-                  name
-               </label>
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
                <input
                   type="text"
-                  id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full border border-gray-600 rounded-lg p-3 bg-gray-700 text-gray-200"
-                  placeholder="Enter name"
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Name"
                   required
                />
-            </div>
 
-            <div className="mb-5">
-               <label
-                  htmlFor="description"
-                  className="block text-sm font-medium text-gray-300 mb-1"
+               <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
                >
-                  Description
-               </label>
+                  <option value="" disabled>
+                     Select a Category
+                  </option>
+                  {categories.map((c, index) => (
+                     <option key={index} value={c}>
+                        {c}
+                     </option>
+                  ))}
+               </select>
+
+               {/* Add Property Section */}
+               <div className="text-center">
+                  <button
+                     type="button"
+                     onClick={() =>
+                        setProperties([...properties, { name: "", values: "" }])
+                     }
+                     className="w-full py-2 rounded bg-blue-600 text-white text-sm"
+                  >
+                     Add New Property
+                  </button>
+               </div>
+               {properties.map((property, index) => (
+                  <div className="flex items-center space-x-2">
+                     <input
+                        type="text"
+                        value={property.name}
+                        onChange={(e) => setPropName(index, e.target.value)}
+                        className="flex-1 p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                        placeholder="Property Name"
+                     />
+                     <input
+                        type="text"
+                        value={property.values}
+                        onChange={(e) => setPropValues(index, e.target.value)}
+                        className="flex-1 p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                        placeholder="Property Values"
+                     />
+                     <button
+                        type="button"
+                        onClick={() => removeProperty(index)}
+                        className="text-red-400 hover:text-red-600"
+                     >
+                        <DeleteIcon fontSize="small" />
+                     </button>
+                  </div>
+               ))}
+
+               <select
+                  value={subCategory}
+                  onChange={(e) => setSubCategory(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+               >
+                  <option value="" disabled>
+                     Select a Sub Category
+                  </option>
+                  {subCategories.map((c, index) => (
+                     <option key={index} value={c}>
+                        {c}
+                     </option>
+                  ))}
+               </select>
+
+               {/* Additional Fields */}
+               <input
+                  type="text"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Brand"
+               />
+
                <textarea
-                  id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full border border-gray-600 rounded-lg p-3 bg-gray-700 text-gray-200"
-                  placeholder="Enter description"
-                  rows="4"
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Description"
+                  rows="3"
                   required
                />
-            </div>
 
-            <div className="mb-5">
-               <label
-                  htmlFor="price"
-                  className="block text-sm font-medium text-gray-300 mb-1"
-               >
-                  Price
-               </label>
                <input
                   type="number"
-                  id="price"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full border border-gray-600 rounded-lg p-3 bg-gray-700 text-gray-200"
-                  placeholder="Enter price"
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Price"
                   required
                />
-            </div>
 
-            <div className="mb-5 flex flex-wrap gap-4">
-               {images.map((link, index) => (
-                  <img
-                     key={index}
-                     src={link}
-                     alt={`Uploaded Image ${index + 1}`}
-                     className="w-32 h-32 object-cover rounded-lg border border-gray-600"
-                  />
-               ))}
-            </div>
-
-            <div className="mb-5">
-               <label
-                  htmlFor="image"
-                  className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 flex items-center justify-between cursor-pointer"
-               >
-                  <div className="flex items-center">
-                     <ImageIcon fontSize="large" />
-                     <span className="ml-4 text-lg">Upload Image</span>
-                  </div>
-                  <UploadRounded fontSize="large" />
-               </label>
                <input
-                  type="file"
-                  id="image"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  accept="image/*"
-                  multiple
+                  type="url"
+                  value={affiliateLink}
+                  onChange={(e) => setAffiliateLink(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Affiliate Link"
+                  required
                />
-            </div>
 
-            {success && (
-               <div className="mb-5 flex items-center text-green-400">
-                  <Success msg={success} />
+               <input
+                  type="number"
+                  value={ratings}
+                  onChange={(e) => setRatings(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Ratings (0-5)"
+                  min="0"
+                  max="5"
+                  required
+               />
+
+               <input
+                  type="number"
+                  value={reviews}
+                  onChange={(e) => setReviews(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Reviews"
+                  min="0"
+               />
+
+               <input
+                  type="text"
+                  value={tags.join(", ")}
+                  onChange={handleTagsChange}
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Tags (comma separated)"
+               />
+
+               <div className="flex items-center space-x-2">
+                  <input
+                     type="checkbox"
+                     checked={isFeatured}
+                     onChange={(e) => setIsFeatured(e.target.checked)}
+                     className="form-checkbox"
+                  />
+                  <span className="text-sm text-gray-300">Featured</span>
                </div>
-            )}
 
-            {error && (
-               <div className="mb-5 text-red-400 flex items-center">
-                  <svg
-                     xmlns="http://www.w3.org/2000/svg"
-                     className="h-6 w-6 mr-2"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                  >
-                     <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+               <input
+                  type="number"
+                  value={discount}
+                  onChange={(e) => setDiscount(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-700 text-gray-200 text-sm"
+                  placeholder="Discount (%)"
+                  min="0"
+                  max="100"
+               />
+
+               <div className="flex flex-wrap gap-4">
+                  {images.map((link, index) => (
+                     <img
+                        key={index}
+                        src={link}
+                        alt={`Uploaded Image ${index + 1}`}
+                        className="w-20 h-20 object-cover rounded-lg border border-gray-600"
                      />
-                  </svg>
-                  {error}
+                  ))}
                </div>
-            )}
 
-            <button
-               type="submit"
-               className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700"
-               disabled={loading}
-            >
-               {loading ? (
-                  <span className="loading loading-spinner loading-xs"></span>
-               ) : (
-                  "Submit"
+               <div>
+                  <label
+                     htmlFor="image"
+                     className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 flex items-center justify-center cursor-pointer"
+                  >
+                     Upload Image
+                     <UploadRounded className="ml-2" />
+                  </label>
+                  <input
+                     type="file"
+                     id="image"
+                     onChange={handleImageUpload}
+                     className="hidden"
+                     accept="image/*"
+                     multiple
+                  />
+               </div>
+
+               {success && (
+                  <div className="text-green-400 text-center">{success}</div>
                )}
-            </button>
-         </form>
+
+               {error && (
+                  <div className="text-red-400 text-center">{error}</div>
+               )}
+
+               <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+                  disabled={loading}
+               >
+                  {loading ? (
+                     <span className="loading loading-spinner loading-xs"></span>
+                  ) : (
+                     "Submit"
+                  )}
+               </button>
+            </form>
+         </main>
       </div>
    );
 }

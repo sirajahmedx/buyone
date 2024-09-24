@@ -7,8 +7,11 @@ import Error from "../../Error";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Add from "./Add";
+// import { useSession } from "next-auth/react";
+// import NotRegistered from "@/components/NotRegistered";
 
-export default function Listing() {
+export default function Home() {
+   // const { data: session, status } = useSession();
    const modalRef = useRef(null);
    const [products, setProducts] = useState([]);
    const [loading, setLoading] = useState(false);
@@ -45,11 +48,23 @@ export default function Listing() {
       }
    };
 
+   // if(!session){
+   //    return <NotRegistered />
+   // }
+
    if (error) return <Error error={error} />;
 
    return (
       <div className="flex flex-col items-center p-6">
          <div className="flex justify-center items-center mb-6">
+            <Link
+               className="btn bg-blue-500 text-white hover:bg-blue-600 py-2 px-6 rounded-lg text-sm font-medium"
+               href="/products/add"
+            >
+               Add New Product
+            </Link>
+         </div>
+         {/* <div className="flex justify-center items-center mb-6">
             <button
                className="btn bg-blue-500 text-white hover:bg-blue-600 py-2 px-6 rounded-lg text-sm font-medium"
                onClick={() => modalRef.current.showModal()}
@@ -92,7 +107,7 @@ export default function Listing() {
                   <Add modalRef={modalRef} refreshCategories={fetchProducts} />
                </div>
             </dialog>
-         </div>
+         </div> */}
 
          {loading ? (
             <div className="w-full max-w-5xl">
@@ -142,10 +157,10 @@ export default function Listing() {
                <table className="min-w-full bg-gray-900 text-white shadow-lg rounded-lg border border-gray-700/50">
                   <thead className="bg-gray-950">
                      <tr>
-                        <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[15%] border border-gray-700/50">
+                        <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[20%] border border-gray-700/50">
                            Name
                         </th>
-                        <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[45%] border border-gray-700/50">
+                        <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[40%] border border-gray-700/50">
                            Description
                         </th>
                         <th className="px-6 py-2 text-left text-xl font-medium text-gray-200 w-[10%] border border-gray-700/50">

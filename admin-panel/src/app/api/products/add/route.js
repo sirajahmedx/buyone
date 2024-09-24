@@ -7,12 +7,32 @@ export async function POST(req) {
       await dbConnect();
 
       const body = await req.json();
-      const { name, description, price, images } = body;
-
-      // Validate input
-      if (!name || !description || !price || !images) {
+      const {
+         name,
+         description,
+         price,
+         category,
+         subCategory,
+         // stock,
+         affiliateLink,
+         ratings,
+         reviews,
+         tags,
+         isFeatured,
+         discount,
+         images,
+         brand,
+         properties,
+      } = body;
+      console.log(properties);
+      // Validate required fields
+      if (!name || !description || !price || !category || !images) {
          return NextResponse.json(
-            { success: false, message: "All fields are required" },
+            {
+               success: false,
+               message:
+                  "Name, description, price, category, and images are required",
+            },
             { status: 400 }
          );
       }
@@ -22,7 +42,18 @@ export async function POST(req) {
          name,
          description,
          price,
+         category,
+         subCategory, // Optional
+         // stock, // Optional
+         affiliateLink, // Optional
+         ratings, // Optional
+         reviews, // Optional
+         tags, // Optional
+         isFeatured: isFeatured || false, // Default to false if not provided
+         discount: discount || 0, // Default to 0 if not provided
          images,
+         brand,
+         properties,
       });
 
       return NextResponse.json(

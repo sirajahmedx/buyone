@@ -1,45 +1,65 @@
 "use client";
-import React, { useState } from "react";
 import axios from "axios";
+// import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {
+   Store as StoreIcon,
+   Image as ImageIcon,
+   UploadRounded,
+} from "@mui/icons-material";
 // import { useSession } from "next-auth/react";
-// import {  useRouter } from "next/navigation";
-import NotRegistered from "@/components/NotRegistered";
+// import NotRegistered from "@/components/NotRegistered";
 
-const Add = ({ modalRef, refreshCategories }) => {
+export default function EditForm({ id }) {
    // const { data: session, status } = useSession();
    const [name, setName] = useState("");
-   const [subcategory, setSubcategory] = useState("");
-   const [error, setError] = useState("");
+   const [parent, setParent] = useState("");
+   const [category, setCategory] = useState("");
    const [loading, setLoading] = useState(false);
+   const [error, setError] = useState("");
    const [properties, setProperties] = useState([]);
+
+   useEffect(() => {
+      const fetchProduct = async () => {
+         try {
+            const response = await axios.get(`/api/categories/get/${id}`);
+            const categoryData = response.data.category;
+
+            console.log(categoryData); // Set product data
+            setCategory(categoryData);
+            setName(categoryData.name || ""); // Initialize form fields
+            setParent(categoryData.parent || "");
+            setProperties(categoryData.properties || []);
+            console.log(properties);
+         } catch (err) {
+            setError("Error fetching product data.");
+         }
+      };
+
+      fetchProduct();
+   }, [id]);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      const category = { name, subcategory, properties };
-      console.log("category", category);
+      setLoading(true);
+      setError("");
 
       try {
-         setLoading(true);
-         await axios.post("/api/categories/add", category);
-         setError("");
-         setName("");
-         setSubcategory("");
-         setProperties([]);
-         // Refresh categories and close the modal
-         refreshCategories();
-         if (modalRef.current) {
-            modalRef.current.close();
-         }
+         await axios.put(`/api/categories/edit/${id}`, {
+            name,
+            parent,
+            properties,
+         });
+         router.push("/categories");
       } catch (error) {
-         console.error("Error adding category:", error);
-         setError(error.message);
+         setError("An error occurred while updating the product.");
       } finally {
          setLoading(false);
       }
    };
 
-   const catCollection = [
+   const parents = [
       "Smartphones & Accessories",
       "Laptops & Computers",
       "Headphones & Earbuds",
@@ -50,19 +70,6 @@ const Add = ({ modalRef, refreshCategories }) => {
       "Networking & Routers",
       "Cameras & Photography",
       "Software & Apps",
-   ];
-
-   const subCollection = [
-      "Smartphones",
-      "Laptops",
-      "Headphones",
-      "Smartwatches",
-      "Home",
-      "Gaming Consoles",
-      "Computer",
-      "Networking",
-      "Cameras",
-      "Software",
    ];
 
    function removeProperty(index) {
@@ -83,58 +90,63 @@ const Add = ({ modalRef, refreshCategories }) => {
    }
 
    // if (!session) {
-   //    return <NotRegistered />
+   //    return(
+   //       <NotRegistered />
+   //    )
    // }
 
    return (
-      <div className="flex flex-col items-center justify-center bg-gray-900 rounded p-3 w-full max-w-lg">
-         <h2 className="text-2xl font-bold mb-3 text-gray-50">Add Category</h2>
-         {error && <p className="text-red-500 mb-4 text-lg">{error}</p>}
-         <form onSubmit={handleSubmit} className="w-full">
+      <div className="flex justify-center items-center min-h-screen bg-gray-800 ">
+         <form
+            onSubmit={handleSubmit}
+            className="w-full p-8 bg-gray-900 rounded-lg shadow-md max-w-lg"
+         >
+            <h2 className="text-2xl font-semibold text-gray-100 mb-6 flex items-center">
+               <StoreIcon className="mr-2" fontSize="large" />
+               Edit Category
+            </h2>
+
             <div className="mb-4">
                <label
                   htmlFor="name"
-                  className="block text-gray-300 mb-2 text-lg"
+                  className="block text-lg font-medium text-gray-300 mb-1"
                >
-                  Category Name
+                  Name
                </label>
-               <select
-                  className="w-full px-3 py-2 rounded border border-gray-400 bg-gray-700 text-gray-100 focus:outline-none focus:border-blue-500"
-                  value={subcategory}
+               <input
+                  type="text"
+                  id="name"
+                  value={name}
                   onChange={(e) => setName(e.target.value)}
-               >
-                  <option value="" disabled>
-                     No Category
-                  </option>
-                  {catCollection.map((cat) => (
-                     <option key={cat} value={cat}>
-                        {cat}
-                     </option>
-                  ))}
-               </select>
+                  className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200"
+                  placeholder="Enter name"
+                  required
+               />
             </div>
+
             <div className="mb-4">
                <label
                   htmlFor="parent"
                   className="block text-gray-300 mb-2 text-lg"
                >
-                  Sub Category
+                  Parent Category Name
                </label>
                <select
-                  className="w-full px-3 py-2 rounded border border-gray-400 bg-gray-700 text-gray-100 focus:outline-none focus:border-blue-500"
-                  value={subcategory}
-                  onChange={(e) => setSubcategory(e.target.value)}
+                  className="w-full px-3 py-3 rounded border border-gray-400 bg-gray-700 text-gray-100 focus:outline-none focus:border-blue-500"
+                  value={parent}
+                  onChange={(e) => setParent(e.target.value)}
                >
                   <option value="" disabled>
-                     No Sub Category
+                     No Parent Category
                   </option>
-                  {subCollection.map((sub) => (
-                     <option key={sub} value={sub}>
-                        {sub}
+                  {parents.map((parent) => (
+                     <option key={parent} value={parent}>
+                        {parent}
                      </option>
                   ))}
                </select>
             </div>
+
             <div className="flex flex-col w-full">
                <div className="text-center">
                   <button
@@ -178,16 +190,38 @@ const Add = ({ modalRef, refreshCategories }) => {
                   </div>
                ))}
             </div>
+
+            {error && (
+               <div className="mb-4 text-red-400 flex items-center">
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     className="h-6 w-6 mr-2"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                  >
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                     />
+                  </svg>
+                  {error}
+               </div>
+            )}
+
             <button
                type="submit"
+               className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                disabled={loading}
-               className="bg-blue-500 text-white py-3 px-4 rounded hover:bg-blue-600 w-full"
             >
-               {loading ? "Submitting..." : "Submit"}
+               {loading ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+               ) : (
+                  "Submit"
+               )}
             </button>
          </form>
       </div>
    );
-};
-
-export default Add;
+}

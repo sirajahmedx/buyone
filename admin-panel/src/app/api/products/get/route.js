@@ -26,3 +26,7 @@ export async function GET() {
       );
    }
 }
+
+// File: /app/api/product/[id]/route.js
+
+
